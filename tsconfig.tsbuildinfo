@@ -1,0 +1,1 @@
+{"root":["./src/index.ts","./src/models/usermodel.ts","./src/routes/userroute.ts","./src/services/userservice.ts"],"version":"5.9.2"}
