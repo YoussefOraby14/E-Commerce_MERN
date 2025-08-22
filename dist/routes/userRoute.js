@@ -28,3 +28,4 @@ router.post('/login', async (req, res) => {
     }
 });
 export default router;
+//# sourceMappingURL=userRoute.js.map

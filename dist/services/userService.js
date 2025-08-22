@@ -44,3 +44,4 @@ export function generateToken(data) {
     return jwt.sign(data, 'RriWMjd7Q4CfkzTUE3NoZCJ0BQgzmioS', { expiresIn: '24h' } // Token expires in 1 hour
     );
 }
+//# sourceMappingURL=userService.js.map
