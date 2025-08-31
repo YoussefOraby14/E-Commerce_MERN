@@ -1,35 +1,20 @@
 import { Cart } from '../models/cartModel.js';
-// import User from '../models/userModel.js';
-
-export interface ICreateCartInput {
-    userId: string;
-    // status: string;
-}
-
-export async function createCartForUser({userId}: ICreateCartInput) {
+export async function createCartForUser({ userId }) {
     // Check if user exists
     // const user = await User.findById(userId);
     // if (!user) {
     //     throw new Error('User not found');
     // }
-
     // Create a new cart
-    const cart = await Cart.create({  userId});
-
+    const cart = await Cart.create({ userId });
     await cart.save();
     return cart;
 }
-
-export interface IgetActiveCart {
-    userId: string;
-    // status: string;
-}
-
-export async function getActiveCart({userId}:IgetActiveCart) {
-    
+export async function getActiveCart({ userId }) {
     let cart = await Cart.findOne({ userId, status: 'active' });
     if (!cart) {
         cart = await createCartForUser({ userId });
     }
     return cart;
 }
+//# sourceMappingURL=cartService.js.map

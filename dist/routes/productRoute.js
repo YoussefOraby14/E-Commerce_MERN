@@ -5,7 +5,7 @@ const router = express.Router();
 router.get('/', async (req, res) => {
     // Placeholder: Replace with actual DB logic
     const products = getAllProducts();
-    res.status(200).json(products);
+    res.status(200).send(products);
 });
 export default router;
 //# sourceMappingURL=productRoute.js.map

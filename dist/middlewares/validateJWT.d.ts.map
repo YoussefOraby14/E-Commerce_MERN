@@ -1,0 +1,1 @@
+{"version":3,"file":"validateJWT.d.ts","sourceRoot":"","sources":["../../src/middlewares/validateJWT.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,OAAO,EAAE,QAAQ,EAAE,YAAY,EAAE,MAAM,SAAS,CAAC;AAI/D,UAAU,eAAgB,SAAQ,OAAO;IACnC,IAAI,CAAC,EAAE,GAAG,CAAC;CAChB;AAED,wBAAgB,WAAW,CAAC,GAAG,EAAE,eAAe,EAAE,GAAG,EAAE,QAAQ,EAAE,IAAI,EAAE,YAAY,QAkClF;AAED,eAAe,WAAW,CAAC"}

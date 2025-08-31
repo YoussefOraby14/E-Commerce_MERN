@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, Model } from "mongoose";
+import mongoose, { Document, Schema, Model, SchemaType, type ObjectId } from "mongoose";
 import type { IProduct } from "./productModel.js";
 
 export interface ICartItem extends Document {
@@ -8,7 +8,7 @@ export interface ICartItem extends Document {
 }
 
 export interface ICart extends Document {
-    userId: string;
+    userId: ObjectId | string;
     items: ICartItem[];
     totalAmount: number;
     status: 'active' | 'completed';
@@ -20,19 +20,16 @@ const cartItemSchema = new Schema<ICartItem>(
         product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
         unitPrice: { type: Number, required: true },
         quantity: { type: Number, required: true, default: 1 },
-    },
-    { _id: false }
+    }
 );
 
 // Cart Schema
 const cartSchema = new Schema<ICart>(
     {
-        userId: { type: String, required: true },
+        userId: { type: Schema.Types.ObjectId, ref :"User", required: true },
         items: [cartItemSchema],
         totalAmount: { type: Number, required: true, default: 0 },
         status: { type: String, enum: ['active', 'completed'], default: 'active' },
-    },
-    { timestamps: true }
-);
+    });
 
-const Cart: Model<ICart> = mongoose.model<ICart>('Cart', cartSchema);
+export const Cart: Model<ICart> = mongoose.model<ICart>('Cart', cartSchema);
