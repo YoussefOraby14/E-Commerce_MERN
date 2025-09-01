@@ -2,6 +2,7 @@ import { Router } from "express";
 import { Cart } from "../models/cartModel.js";
 import mongoose from "mongoose";
 import { addItemsToCart, getActiveCart } from "../services/cartService.js";
+import { updateCartItem } from "../services/cartService.js";
 import validateJWT from "../middlewares/validateJWT.js";
 const router = Router();
 router.get("/", validateJWT, async (req, res) => {
@@ -62,6 +63,72 @@ router.post("/items", validateJWT, async (req, res) => {
         // Generic server error
         res.status(500).json({
             message: "Internal server error",
+            error: errorMessage
+        });
+    }
+});
+// Update item quantity in cart
+router.put("/items", validateJWT, async (req, res) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: "Unauthorized"
+            });
+        }
+        const userId = req.user._id;
+        // const { , } = req.params;
+        const { productId, quantity } = req.body;
+        // Validation
+        if (!quantity || quantity <= 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Valid quantity is required"
+            });
+        }
+        const cart = await updateCartItem({
+            userId,
+            productId,
+            quantity: parseInt(quantity)
+        });
+        res.status(200).json({
+            success: true,
+            message: "Cart item updated successfully",
+            cart
+        });
+    }
+    catch (error) {
+        console.error('Update cart item error:', error);
+        const errorMessage = error.message;
+        // Handle specific errors
+        if (errorMessage === 'Item not found in cart') {
+            return res.status(404).json({
+                success: false,
+                message: errorMessage
+            });
+        }
+        if (errorMessage === 'Product not found') {
+            return res.status(404).json({
+                success: false,
+                message: errorMessage
+            });
+        }
+        if (errorMessage.includes('exceeds available stock')) {
+            return res.status(400).json({
+                success: false,
+                message: errorMessage
+            });
+        }
+        if (errorMessage.includes('required') || errorMessage.includes('greater than 0')) {
+            return res.status(400).json({
+                success: false,
+                message: errorMessage
+            });
+        }
+        // Generic server error
+        res.status(500).json({
+            success: false,
+            message: "Failed to update cart item",
             error: errorMessage
         });
     }

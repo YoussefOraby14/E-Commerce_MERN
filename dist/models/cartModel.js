@@ -1,5 +1,4 @@
-// ============ CART MODEL (cartModel.ts) ============
-import mongoose, { Document, Schema, Model } from "mongoose";
+import mongoose, { Document, Schema, Model, SchemaType } from "mongoose";
 // CartItem Schema
 const cartItemSchema = new Schema({
     product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
@@ -12,8 +11,6 @@ const cartSchema = new Schema({
     items: [cartItemSchema],
     totalAmount: { type: Number, required: true, default: 0 },
     status: { type: String, enum: ['active', 'completed'], default: 'active' },
-}, {
-    timestamps: true
 });
 export const Cart = mongoose.model('Cart', cartSchema);
 //# sourceMappingURL=cartModel.js.map

@@ -44,7 +44,7 @@ export async function addItemsToCart({ userId, productId, quantity = 1 }) {
         throw new Error('Failed to get or create cart');
     const unitPrice = product.price;
     // Find existing item
-    const existingItem = cart.items.find(item => item.product.toString() === product.id.toString());
+    const existingItem = cart.items.find(item => item.product.toString() === productId.toString());
     // Determine new quantity and validate against stock
     const existingQty = existingItem ? (existingItem.quantity || 0) : 0;
     const newTotalQty = existingQty + quantity;
@@ -60,6 +60,38 @@ export async function addItemsToCart({ userId, productId, quantity = 1 }) {
     }
     // Recalculate totalAmount
     cart.totalAmount = cart.items.reduce((sum, it) => sum + (it.unitPrice * it.quantity), 0);
+    await cart.save();
+    await cart.populate('items.product');
+    return cart;
+}
+export async function updateCartItem({ userId, productId, quantity }) {
+    if (!userId)
+        throw new Error('userId is required');
+    if (!productId)
+        throw new Error('productId is required');
+    if (quantity <= 0)
+        throw new Error('quantity must be greater than 0');
+    // Get user's active cart
+    const cart = await getActiveCart({ userId });
+    if (!cart)
+        throw new Error('Cart not found');
+    // Find the item in cart
+    const existingItem = cart.items.find(item => item.product.toString() === productId.toString());
+    if (!existingItem) {
+        throw new Error('Item not found in cart');
+    }
+    // Check if product still exists and has enough stock
+    const product = await Product.findById(new mongoose.Types.ObjectId(productId));
+    if (!product)
+        throw new Error('Product not found');
+    if (product.stock && quantity > product.stock) {
+        throw new Error(`Requested quantity (${quantity}) exceeds available stock (${product.stock}).`);
+    }
+    // Update the item
+    existingItem.quantity = quantity;
+    existingItem.unitPrice = product.price; // Update price in case it changed
+    // Recalculate totalAmount
+    cart.totalAmount = cart.items.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
     await cart.save();
     await cart.populate('items.product');
     return cart;
