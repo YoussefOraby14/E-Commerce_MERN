@@ -40,4 +40,21 @@ export declare function updateCartItem({ userId, productId, quantity }: IUpdateC
 }> & {
     __v: number;
 }>;
+export interface IRemoveCartItemInput {
+    userId: string;
+    productId: string;
+}
+export declare function removeCartItem({ userId, productId }: IRemoveCartItemInput): Promise<mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+    _id: unknown;
+}> & {
+    __v: number;
+}>;
+export interface IClearCartInput {
+    userId: string;
+}
+export declare function clearCart({ userId }: IClearCartInput): Promise<mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+    _id: unknown;
+}> & {
+    __v: number;
+}>;
 //# sourceMappingURL=cartService.d.ts.map

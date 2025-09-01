@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { Cart } from "../models/cartModel.js";  
 import mongoose from "mongoose";
-import { addItemsToCart, getActiveCart} from "../services/cartService.js";
+import { addItemsToCart, clearCart, getActiveCart, removeCartItem} from "../services/cartService.js";
 import { updateCartItem } from "../services/cartService.js";
 import validateJWT from "../middlewares/validateJWT.js";
 
@@ -167,5 +167,78 @@ router.put("/items", validateJWT, async (req, res) => {
         });
     }
 });
+
+// Delete item from cart
+router.delete("/items/:productId", validateJWT, async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const userId = req.user._id;
+    const { productId } = req.params;
+
+    if (!productId) {
+      return res.status(400).json({ success: false, message: "Product ID is required" });
+    }
+
+    const cart = await removeCartItem({ userId, productId });
+
+    res.status(200).json({
+      success: true,
+      message: "Item removed from cart successfully",
+      cart,
+    });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+
+    if (errorMessage === "Item not found in cart") {
+      return res.status(404).json({ success: false, message: errorMessage });
+    }
+
+    if (errorMessage === "Cart not found") {
+      return res.status(404).json({ success: false, message: errorMessage });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to remove item from cart",
+      error: errorMessage,
+    });
+  }
+});
+
+// Clear all items in the cart
+router.delete("/clear", validateJWT, async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const userId = req.user._id;
+
+    const cart = await clearCart({ userId });
+
+    res.status(200).json({
+      success: true,
+      message: "Cart cleared successfully",
+      cart,
+    });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+
+    if (errorMessage === "Cart not found") {
+      return res.status(404).json({ success: false, message: errorMessage });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to clear cart",
+      error: errorMessage,
+    });
+  }
+});
+
+
 
 export default router;

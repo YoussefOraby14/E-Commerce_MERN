@@ -96,4 +96,39 @@ export async function updateCartItem({ userId, productId, quantity }) {
     await cart.populate('items.product');
     return cart;
 }
+export async function removeCartItem({ userId, productId }) {
+    if (!userId)
+        throw new Error("userId is required");
+    if (!productId)
+        throw new Error("productId is required");
+    // Get user's active cart
+    const cart = await getActiveCart({ userId });
+    if (!cart)
+        throw new Error("Cart not found");
+    // Filter out the product to be removed
+    const updatedItems = cart.items.filter(item => item.product.toString() !== productId.toString());
+    if (updatedItems.length === cart.items.length) {
+        throw new Error("Item not found in cart");
+    }
+    cart.items = updatedItems;
+    // Recalculate totalAmount
+    cart.totalAmount = cart.items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+    await cart.save();
+    await cart.populate("items.product");
+    return cart;
+}
+export async function clearCart({ userId }) {
+    if (!userId)
+        throw new Error("userId is required");
+    // Get user's active cart
+    const cart = await getActiveCart({ userId });
+    if (!cart)
+        throw new Error("Cart not found");
+    // Clear items + reset total
+    cart.items = [];
+    cart.totalAmount = 0;
+    await cart.save();
+    await cart.populate("items.product");
+    return cart;
+}
 //# sourceMappingURL=cartService.js.map
