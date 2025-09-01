@@ -1,4 +1,5 @@
 import { Cart } from '../models/cartModel.js';
+import { Order, type IOrderItem } from '../models/orderModel.js';
 // import User from '../models/userModel.js';
 import Product from '../models/productModel.js';
 import mongoose from "mongoose";
@@ -204,3 +205,45 @@ export async function clearCart({ userId }: IClearCartInput) {
   return cart;
 }
 
+
+interface ICheckoutInput {
+  userId: string;
+  address: string;    }
+
+export async function checkout({userId, address}: ICheckoutInput) {
+  if (!userId) throw new Error("userId is required");
+  if (!address) throw new Error("address is required");
+
+  const cart = await getActiveCart({ userId });
+  if (!cart || cart.items.length === 0) {
+    throw new Error("Cart is empty");
+  }
+  const orderItems: IOrderItem[] = [];
+
+  for(const item of cart.items) {
+    const product = await Product.findById(item.product);
+    if (!product) {
+        throw new Error(`Product with ID ${item.product} not found`);
+    }
+    const orderItem : IOrderItem= {
+        productTitle: product.title,
+        productImage: product.image ,
+        unitPrice: item.unitPrice,
+        quantity: item.quantity
+    }
+    orderItems.push(orderItem);
+  }
+
+  const order = await Order.create({
+    userId: new mongoose.Types.ObjectId(userId),
+    items: orderItems,
+    totalAmount: cart.totalAmount,
+    address ,
+  });
+
+  cart.status = 'completed';
+ 
+  await cart.save();
+
+  return order;
+}

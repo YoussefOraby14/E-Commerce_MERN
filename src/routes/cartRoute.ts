@@ -4,7 +4,8 @@ import mongoose from "mongoose";
 import { addItemsToCart, clearCart, getActiveCart, removeCartItem} from "../services/cartService.js";
 import { updateCartItem } from "../services/cartService.js";
 import validateJWT from "../middlewares/validateJWT.js";
-
+import { Order } from "../models/orderModel.js";
+import { checkout } from "../services/cartService.js";
 // Extend Express Request interface to include 'user'
 declare module "express-serve-static-core" {
   interface Request {
@@ -239,6 +240,36 @@ router.delete("/clear", validateJWT, async (req, res) => {
   }
 });
 
+
+router.post("/checkout", validateJWT, async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    const userId = req.user._id;
+    const {address} = req.body;
+    const order = await checkout({userId, address});
+
+    res.status(201).json({
+      success: true,
+      message: "Order created successfully",
+      order,
+    });
+  } catch (error) {
+    const errorMessage = (error as Error).message;
+
+    if (errorMessage === "Cart is empty") {
+      return res.status(400).json({ success: false, message: errorMessage });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to create order",
+      error: errorMessage,
+    });
+  }
+});
 
 
 export default router;

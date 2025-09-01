@@ -57,4 +57,14 @@ export declare function clearCart({ userId }: IClearCartInput): Promise<mongoose
 }> & {
     __v: number;
 }>;
+interface ICheckoutInput {
+    userId: string;
+    address: string;
+}
+export declare function checkout({ userId, address }: ICheckoutInput): Promise<mongoose.Document<unknown, {}, import("../models/orderModel.js").IOrder, {}, {}> & import("../models/orderModel.js").IOrder & Required<{
+    _id: unknown;
+}> & {
+    __v: number;
+}>;
+export {};
 //# sourceMappingURL=cartService.d.ts.map
