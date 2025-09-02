@@ -12,7 +12,7 @@ export function validateJWT(req, res, next) {
         res.status(403).send('Invalid Authorization header format');
         return;
     }
-    jwt.verify(parts, 'RriWMjd7Q4CfkzTUE3NoZCJ0BQgzmioS', async (err, payload) => {
+    jwt.verify(parts, process.env.JWT_SECRET || "", async (err, payload) => {
         if (err) {
             res.status(403).send('Invalid or expired token');
             return;

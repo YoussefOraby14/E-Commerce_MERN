@@ -56,7 +56,7 @@ export async function login(email: string, password: string) {
 export function generateToken(data: any) {
     return jwt.sign(
         data,
-        'RriWMjd7Q4CfkzTUE3NoZCJ0BQgzmioS',
+        process.env.JWT_SECRET || "",
         { expiresIn: '24h' } // Token expires in 1 hour
     );
 }
