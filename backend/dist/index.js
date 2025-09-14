@@ -4,11 +4,12 @@ import userRoute from "./routes/userRoute.js";
 import { seedProducts } from "./services/productService.js";
 import productRoute from "./routes/productRoute.js";
 import cartRoute from "./routes/cartRoute.js";
-// Load environment variables from .env file
+import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 const app = express();
 const port = 3001;
+app.use(cors());
 app.use(express.json());
 mongoose.connect(process.env.DATABASE_URL || "")
     .then(() => console.log("✅ Connected to MongoDB"))
