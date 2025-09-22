@@ -21,6 +21,7 @@ const HomePage = () => {
     };
     fetchdata();
   }, []);
+  
   if (error) {
     return <div>Failed to load products. Please try again later.</div>;
   }

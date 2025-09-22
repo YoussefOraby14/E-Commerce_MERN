@@ -9,6 +9,8 @@ import { useAuth } from "../context/Auth/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 const RegisterPage = () => {
+
+
   const [error, setError] = useState("");
   const firstNameRef = useRef<HTMLInputElement>(null);
   const lastNameRef = useRef<HTMLInputElement>(null);
@@ -91,7 +93,7 @@ const RegisterPage = () => {
           />
           <TextField inputRef={lastNameRef} label="Last Name" name="lastName" />
           <TextField inputRef={emailRef} label="Email" name="email" />
-          <TextField
+           <TextField
             inputRef={passwordRef}
             type="password"
             label="Password"
