@@ -214,7 +214,7 @@ export async function clearCart({ userId }: IClearCartInput) {
   await cart.save();
   await cart.populate("items.product");
 
-  return cart;
+  return {data:await getActiveCart({ userId, populateProducts: true }), status:200};
 }
 
 
