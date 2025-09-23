@@ -19,7 +19,7 @@ router.get("/", validateJWT, async (req, res) => {
   try {
     if (!req.user) return res.status(401).send("Unauthorized");
     const userId = req.user._id;
-    const cart = await getActiveCart({ userId });
+    const cart = await getActiveCart({ userId, populateProducts: true });
     res.status(200).json(cart);
   } catch (err) {
     res.status(500).json({ message: "Server error", error: err });

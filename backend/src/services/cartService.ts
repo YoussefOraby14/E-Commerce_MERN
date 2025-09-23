@@ -24,13 +24,22 @@ export async function createCartForUser({userId}: ICreateCartInput) {
 export interface IGetActiveCart {
     userId: string;
     // status: string;
+    populateProducts?: boolean;
 }
 
-export async function getActiveCart({ userId }: IGetActiveCart) {
-    let cart = await Cart.findOne({ 
+export async function getActiveCart({ userId , populateProducts}: IGetActiveCart) {
+    let cart ;
+    if(populateProducts) {
+    cart= await Cart.findOne({ 
         userId: new mongoose.Types.ObjectId(userId), 
         status: 'active' 
-    });
+    }).populate('items.product');
+    } else {
+        cart = await Cart.findOne({ 
+            userId: new mongoose.Types.ObjectId(userId), 
+            status: 'active' 
+        });
+    }
 
     if (!cart) {
         cart = await createCartForUser({ userId });
@@ -94,7 +103,8 @@ export async function addItemsToCart({ userId, productId, quantity = 1 }: IAddIt
     await cart.save();
     await cart.populate('items.product');
 
-    return cart;
+    // return cart;
+    return {data: await getActiveCart({ userId, populateProducts: true }), status:200};
 }
 
 
@@ -142,7 +152,8 @@ export async function updateCartItem({ userId, productId, quantity }: IUpdateCar
     
     await cart.save();
     await cart.populate('items.product');
-    return cart;
+    // return cart;
+    return {data: await getActiveCart({ userId, populateProducts: true }), status:200};
 }
 
 
@@ -180,7 +191,8 @@ export async function removeCartItem({ userId, productId }: IRemoveCartItemInput
   await cart.save();
   await cart.populate("items.product");
 
-  return cart;
+  // return cart;
+  return {data:await getActiveCart({ userId, populateProducts: true }), status:200};
 }
 
 

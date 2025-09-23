@@ -10,15 +10,15 @@ import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
-// import ShoppingCart from "@mui/icons-material/ShoppingCart";
+import ShoppingCart from "@mui/icons-material/ShoppingCart";
 import { useAuth } from "../context/Auth/AuthContext";
-import {  Button } from "@mui/material";
+import {  Button, Badge } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-// import { useCart } from "../context/Cart/CartContext";
+import { useCart } from "../context/Cart/CartContext";
 
 function Navbar() {
   const { username, isAuthenticated, logout } = useAuth();
-  // const { cartItems } = useCart();
+  const { cartItems } = useCart();
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(
     null
   );
@@ -43,9 +43,9 @@ function Navbar() {
     handleCloseUserMenu();
   };
 
-  // const handleCart = () => {
-  //   navigate("/cart");
-  // };
+  const handleCart = () => {
+    navigate("/cart");
+  };
 
   return (
     <AppBar position="static">
@@ -95,11 +95,11 @@ function Navbar() {
               alignItems="center"
               justifyContent="center"
             >
-              {/* <IconButton aria-label="cart" onClick={handleCart}>
+              <IconButton aria-label="cart" onClick={handleCart}>
                 <Badge badgeContent={cartItems.length} color="secondary">
                   <ShoppingCart sx={{ color: "#ffffff" }} />
                 </Badge>
-              </IconButton> */}
+              </IconButton>
               {isAuthenticated ? (
                 <>
                   <Tooltip title="Open settings">
