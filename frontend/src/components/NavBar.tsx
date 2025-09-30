@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import ShoppingCart from "@mui/icons-material/ShoppingCart";
 import { useAuth } from "../context/Auth/AuthContext";
-import { Badge, Button, Grid } from "@mui/material";
+import {  Button, Badge } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/Cart/CartContext";
 
@@ -35,6 +35,11 @@ function Navbar() {
 
   const handleLogin = () => {
     navigate("/login");
+  };
+
+  const handleMyOrders = () => {
+    navigate("/my-orders");
+    handleCloseUserMenu();
   };
 
   const handleLogout = () => {
@@ -103,24 +108,22 @@ function Navbar() {
               {isAuthenticated ? (
                 <>
                   <Tooltip title="Open settings">
-                    <Grid
-                      container
-                      alignItems="center"
-                      justifyContent="center"
-                      gap={2}
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: 2
+                      }}
                     >
-                      <Grid item>
-                        <Typography>{username}</Typography>
-                      </Grid>
-                      <Grid item>
-                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                          <Avatar
-                            alt={username || ""}
-                            src="/static/images/avatar/2.jpg"
-                          />
-                        </IconButton>
-                      </Grid>
-                    </Grid>
+                      <Typography>{username}</Typography>
+                      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                        <Avatar
+                          alt={username || ""}
+                          src="/static/images/avatar/2.jpg"
+                        />
+                      </IconButton>
+                    </Box>
                   </Tooltip>
                   <Menu
                     sx={{ mt: "45px" }}
@@ -138,7 +141,7 @@ function Navbar() {
                     open={Boolean(anchorElUser)}
                     onClose={handleCloseUserMenu}
                   >
-                    <MenuItem onClick={handleCloseUserMenu}>
+                    <MenuItem onClick={handleMyOrders}>
                       <Typography textAlign="center">My Orders</Typography>
                     </MenuItem>
                     <MenuItem onClick={handleLogout}>
@@ -162,4 +165,5 @@ function Navbar() {
     </AppBar>
   );
 }
+
 export default Navbar;
