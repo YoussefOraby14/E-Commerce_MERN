@@ -1,5 +1,7 @@
 import express from "express";
 import { register, login } from "../services/userService.js";
+import { getMyOrders } from "../services/userService.js";
+import validateJWT from "../middlewares/validateJWT.js";
 const router = express.Router();
 // Register route
 router.post('/register', async (req, res) => {
@@ -25,6 +27,17 @@ router.post('/login', async (req, res) => {
     }
     catch (error) {
         res.status(400).json({ message: error.message });
+    }
+});
+// My orders route
+router.get('/my-orders', validateJWT, async (req, res) => {
+    try {
+        const userId = req?.user?._id;
+        const { status, data } = await getMyOrders(userId);
+        res.status(status).send(data);
+    }
+    catch (error) {
+        res.status(400).send("Failed to get my orders");
     }
 });
 export default router;

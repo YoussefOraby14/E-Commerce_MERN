@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import ShoppingCart from "@mui/icons-material/ShoppingCart";
 import { useAuth } from "../context/Auth/AuthContext";
-import {  Button, Badge } from "@mui/material";
+import { Badge, Button, Grid } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/Cart/CartContext";
 
@@ -103,22 +103,24 @@ function Navbar() {
               {isAuthenticated ? (
                 <>
                   <Tooltip title="Open settings">
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: 2
-                      }}
+                    <Grid
+                      container
+                      alignItems="center"
+                      justifyContent="center"
+                      gap={2}
                     >
-                      <Typography>{username}</Typography>
-                      <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                        <Avatar
-                          alt={username || ""}
-                          src="/static/images/avatar/2.jpg"
-                        />
-                      </IconButton>
-                    </Box>
+                      <Grid item>
+                        <Typography>{username}</Typography>
+                      </Grid>
+                      <Grid item>
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                          <Avatar
+                            alt={username || ""}
+                            src="/static/images/avatar/2.jpg"
+                          />
+                        </IconButton>
+                      </Grid>
+                    </Grid>
                   </Tooltip>
                   <Menu
                     sx={{ mt: "45px" }}
@@ -160,5 +162,4 @@ function Navbar() {
     </AppBar>
   );
 }
-
 export default Navbar;

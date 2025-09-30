@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/userModel.js';
 import jwt from 'jsonwebtoken';
+import { Order } from '../models/orderModel.js';
 // Register function
 export async function register(firstname, lastname, email, password) {
     // check if email already exists
@@ -43,5 +44,15 @@ export async function login(email, password) {
 export function generateToken(data) {
     return jwt.sign(data, process.env.JWT_SECRET || "", { expiresIn: '24h' } // Token expires in 1 hour
     );
+}
+// Function to get my orders
+export async function getMyOrders(userId) {
+    try {
+        const orders = await Order.find({ userId });
+        return { data: orders, status: 200 };
+    }
+    catch (error) {
+        throw new Error('Failed to get my orders');
+    }
 }
 //# sourceMappingURL=userService.js.map

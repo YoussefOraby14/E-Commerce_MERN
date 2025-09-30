@@ -13,11 +13,20 @@ export async function createCartForUser({ userId }) {
     const cart = await Cart.create({ userId });
     return cart;
 }
-export async function getActiveCart({ userId }) {
-    let cart = await Cart.findOne({
-        userId: new mongoose.Types.ObjectId(userId),
-        status: 'active'
-    });
+export async function getActiveCart({ userId, populateProducts }) {
+    let cart;
+    if (populateProducts) {
+        cart = await Cart.findOne({
+            userId: new mongoose.Types.ObjectId(userId),
+            status: 'active'
+        }).populate('items.product');
+    }
+    else {
+        cart = await Cart.findOne({
+            userId: new mongoose.Types.ObjectId(userId),
+            status: 'active'
+        });
+    }
     if (!cart) {
         cart = await createCartForUser({ userId });
     }
@@ -63,7 +72,8 @@ export async function addItemsToCart({ userId, productId, quantity = 1 }) {
     cart.totalAmount = cart.items.reduce((sum, it) => sum + (it.unitPrice * it.quantity), 0);
     await cart.save();
     await cart.populate('items.product');
-    return cart;
+    // return cart;
+    return { data: await getActiveCart({ userId, populateProducts: true }), status: 200 };
 }
 export async function updateCartItem({ userId, productId, quantity }) {
     if (!userId)
@@ -95,7 +105,8 @@ export async function updateCartItem({ userId, productId, quantity }) {
     cart.totalAmount = cart.items.reduce((sum, item) => sum + (item.unitPrice * item.quantity), 0);
     await cart.save();
     await cart.populate('items.product');
-    return cart;
+    // return cart;
+    return { data: await getActiveCart({ userId, populateProducts: true }), status: 200 };
 }
 export async function removeCartItem({ userId, productId }) {
     if (!userId)
@@ -116,7 +127,8 @@ export async function removeCartItem({ userId, productId }) {
     cart.totalAmount = cart.items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
     await cart.save();
     await cart.populate("items.product");
-    return cart;
+    // return cart;
+    return { data: await getActiveCart({ userId, populateProducts: true }), status: 200 };
 }
 export async function clearCart({ userId }) {
     if (!userId)
@@ -130,7 +142,7 @@ export async function clearCart({ userId }) {
     cart.totalAmount = 0;
     await cart.save();
     await cart.populate("items.product");
-    return cart;
+    return { data: await getActiveCart({ userId, populateProducts: true }), status: 200 };
 }
 export async function checkout({ userId, address }) {
     if (!userId)

@@ -28,7 +28,11 @@ export default function ProductCard({ _id, title, image, price }: Props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button variant="contained" size="small" onClick={() => addItemToCart(_id)}>
+        <Button variant="contained" size="small" onClick={() => {
+  console.log("Button clicked with id:", _id);
+  addItemToCart(_id);
+}}
+>
           Add to Cart
         </Button>
       </CardActions>

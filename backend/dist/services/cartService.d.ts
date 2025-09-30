@@ -9,8 +9,9 @@ export declare function createCartForUser({ userId }: ICreateCartInput): Promise
 }>;
 export interface IGetActiveCart {
     userId: string;
+    populateProducts?: boolean;
 }
-export declare function getActiveCart({ userId }: IGetActiveCart): Promise<mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+export declare function getActiveCart({ userId, populateProducts }: IGetActiveCart): Promise<mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
     _id: unknown;
 }> & {
     __v: number;
@@ -25,37 +26,49 @@ export interface IAddItemInput {
  * - If the product already exists in the cart, increases its quantity.
  * - Recalculates totalAmount and saves the cart.
  */
-export declare function addItemsToCart({ userId, productId, quantity }: IAddItemInput): Promise<mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
-    _id: unknown;
-}> & {
-    __v: number;
+export declare function addItemsToCart({ userId, productId, quantity }: IAddItemInput): Promise<{
+    data: mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+        _id: unknown;
+    }> & {
+        __v: number;
+    };
+    status: number;
 }>;
 export interface IUpdateCartItemInput {
     userId: string;
     productId: string;
     quantity: number;
 }
-export declare function updateCartItem({ userId, productId, quantity }: IUpdateCartItemInput): Promise<mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
-    _id: unknown;
-}> & {
-    __v: number;
+export declare function updateCartItem({ userId, productId, quantity }: IUpdateCartItemInput): Promise<{
+    data: mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+        _id: unknown;
+    }> & {
+        __v: number;
+    };
+    status: number;
 }>;
 export interface IRemoveCartItemInput {
     userId: string;
     productId: string;
 }
-export declare function removeCartItem({ userId, productId }: IRemoveCartItemInput): Promise<mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
-    _id: unknown;
-}> & {
-    __v: number;
+export declare function removeCartItem({ userId, productId }: IRemoveCartItemInput): Promise<{
+    data: mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+        _id: unknown;
+    }> & {
+        __v: number;
+    };
+    status: number;
 }>;
 export interface IClearCartInput {
     userId: string;
 }
-export declare function clearCart({ userId }: IClearCartInput): Promise<mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
-    _id: unknown;
-}> & {
-    __v: number;
+export declare function clearCart({ userId }: IClearCartInput): Promise<{
+    data: mongoose.Document<unknown, {}, import("../models/cartModel.js").ICart, {}, {}> & import("../models/cartModel.js").ICart & Required<{
+        _id: unknown;
+    }> & {
+        __v: number;
+    };
+    status: number;
 }>;
 interface ICheckoutInput {
     userId: string;

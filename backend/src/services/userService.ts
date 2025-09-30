@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../models/userModel.js'; 
 import jwt from 'jsonwebtoken';
+import { Order } from '../models/orderModel.js';
 
 // Register function
 export async function register(firstname: string, lastname: string, email: string, password: string) {
@@ -61,3 +62,14 @@ export function generateToken(data: any) {
     );
 }
 
+
+// Function to get my orders
+export async function getMyOrders(userId: string) {
+    try {
+        const orders = await Order.find({ userId });
+        
+        return {data:orders, status:200};
+    } catch (error) {
+        throw new Error('Failed to get my orders');
+    }
+}

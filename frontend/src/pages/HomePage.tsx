@@ -47,10 +47,10 @@ const HomePage = () => {
               }
             }}
           >
-            <ProductCard id={p._id} title={p.title} image={p.image} price={p.price}/>
+            <ProductCard _id={p._id} title={p.title} image={p.image} price={p.price}/>
           </Box>
         ))}
-      </Box>
+      </Box> 
     </Container>
   );
 };
